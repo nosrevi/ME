@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8" />
+  <title>水浒人物关系</title>
+  <!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame
+  Remove this if you use the .htaccess -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.3.min.js"></script>
+  <!--<script type="text/javascript" src="https://www.google.com/jsapi"></script>-->
+  <script type="text/javascript">
+   //google.load("jquery", "1");
+   //google.setOnLoadCallback(function() {
+    $(document).ready(function() {
+        initialize().then (
+            function (control) {
+                doTheTreeViz(control);
+            }
+        );
+    });
+  </script> 
+  <link rel="stylesheet" type="text/css" href="style.css">
+
+  <script>
+  function doTheTreeViz(control) {
+
+    var svg = control.svg;
+
+    var force = control.force;
+    force.nodes(control.nodes)
+        .links(control.links)
+        .start();
+
+    // Update the links
+    var link = svg.selectAll("line.link")
+        .data(control.links, function(d) { return d.unique; } );
+ 
+    // Enter any new links
+    link.enter().insert("svg:line", ".node")
+        .attr("class", "link")
+        .attr("x1", function(d) { return d.source.x; })
+        .attr("y1", function(d) { return d.source.y; })
+        .attr("x2", function(d) { return d.target.x; })
+        .attr("y2", function(d) { return d.target.y; })
+      .append("svg:title")
+        //.text(function(d) { return d.s + ":" + d.t; });
+        .text(function(d) { return d.tag ? d.tag : ''; });
+    
+    // Exit any old links.
+    link.exit().remove();
+
+
+  // Update the nodes
+    var node = svg.selectAll("g.node")
+        .data(control.nodes, function(d) { return d.unique; });
+
+    node.select("circle")
+        .style("fill", function(d) {
+            return getColor(d);
+        })
+        .attr("r", function(d) {
+            return getRadius(d);
+        })
+
+  // Enter any new nodes.
+    var nodeEnter = node.enter()
+      .append("svg:g")
+        .attr("class", "node")
+        .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
+        .on("click", function(d){
+            // this is a hack so that click doesnt fire on the1st click of a dblclick
+            if (!control.nodeClickInProgress ) {
+                control.nodeClickInProgress = true;
+                setTimeout(function(){
+                    if (control.nodeClickInProgress) { 
+                        control.nodeClickInProgress = false;
+                        if (control.options.nodeFocus) {
+                            d.isCurrentlyFocused = !d.isCurrentlyFocused;
+                            doTheTreeViz(makeFilteredData(control));
+                        }
+                    }
+                },control.clickHack); 
+            }
+        })
+        .call(force.drag);
+
+    nodeEnter
+      .append("svg:circle")
+        .attr("r", function(d) {
+            return getRadius(d);
+        })
+        .style("fill", function(d) {
+            return getColor(d);
+        })
+      .append("svg:title")
+        .text(function(d) { return d[control.options.nodeLabel]; });
+
+   if (control.options.nodeLabel) {       
+       // text is done once for shadow as well as for text
+        nodeEnter.append("svg:text")
+            .attr("x", control.options.labelOffset)
+            .attr("dy", ".31em")
+            .attr("class", "shadow")
+            .style("font-size",control.options.labelFontSize + "px")
+            .text(function(d) {
+                return d.name;
+            });
+        nodeEnter.append("svg:text")
+            .attr("x", control.options.labelOffset)
+            .attr("dy", ".35em")
+            .attr("class", "text")
+            .style("font-size",control.options.labelFontSize + "px")
+            .text(function(d) {
+                return d.name;
+            });
+    }
+
+    // Exit any old nodes.
+    node.exit().remove();
+    control.link = svg.selectAll("line.link");
+    control.node = svg.selectAll("g.node");
+    force.on("tick", tick);
+
+    if (control.options.linkName) {
+        link.append("title")
+            .text(function(d) {
+                return d[control.options.linkName];
+        });
+    }
+
+
+    function tick() {
+        link.attr("x1", function(d) { return d.source.x; })
+            .attr("y1", function(d) { return d.source.y; })
+            .attr("x2", function(d) { return d.target.x; })
+            .attr("y2", function(d) { return d.target.y; });
+        node.attr("transform", function(d) {
+            return "translate(" + d.x + "," + d.y + ")";
+        });
+
+    }
+ 
+    function getRadius(d) {
+     var r = control.options.radius * (control.options.nodeResize ? Math.sqrt(d[control.options.nodeResize]) / Math.PI : 1);
+     return control.options.nodeFocus && d.isCurrentlyFocused ? control.options.nodeFocusRadius  : r;
+    }
+    function getColor(d) {
+        return control.options.nodeFocus && d.isCurrentlyFocused ? control.options.nodeFocusColor  : control.color(d.group) ;
+    }
+
+   }
+
+function makeFilteredData(control,selectedNode){
+    // we'll keep only the data where filterned nodes are the source or target
+    var newNodes = [];
+    var newLinks = [];
+
+    for (var i = 0; i < control.data.links.length ; i++) {
+        var link = control.data.links[i];
+        if (link.target.isCurrentlyFocused || link.source.isCurrentlyFocused) {
+            newLinks.push(link);
+            addNodeIfNotThere(link.source,newNodes);
+            addNodeIfNotThere(link.target,newNodes);
+        }
+    }
+    // if none are selected reinstate the whole dataset
+    if (newNodes.length > 0) {
+        control.links = newLinks;
+        control.nodes = newNodes;
+    }
+    else {
+        control.nodes = control.data.nodes;
+        control.links = control.data.links;
+    }
+    return control;
+    
+    function addNodeIfNotThere( node, nodes) {
+        for ( var i=0; i < nodes.length; i++) {
+            if (nodes[i].unique == node.unique) return i;
+        }
+        return nodes.push(node) -1;
+    }
+}
+function organizeData(control) {
+
+    for (var i=0; i < control.nodes.length; i ++ ) {
+        var node = control.nodes[i]; 
+        node.unique = i;
+        node.isCurrentlyFocused = false;
+    }
+    
+    for (var i=0; i < control.links.length; i ++ ) {
+        var link = control.links[i];
+        link.unique = i;
+        link.s = link.source;
+        link.t = link.target;
+        link.source = control.nodes[link.source];
+        link.target = control.nodes[link.target];
+    }
+    return control;
+}
+
+
+function initialize () {
+   
+    var initPromise = $.Deferred();
+
+    getTheData().then( function (data) {  
+        var control = {};
+        control.data = data;
+        control.divName = "#chart";
+
+        control.options = $.extend({
+            stackHeight : 12,
+            radius : 5,
+            fontSize : 14,
+            labelFontSize : 8,
+            nodeLabel : null,
+            markerWidth : 0,
+            markerHeight : 0,
+            width : $(control.divName).outerWidth(),
+            gap : 1.5,
+            nodeResize : "",
+            linkDistance : 80,
+            charge : -120,
+            styleColumn : null,
+            styles : null,
+            linkName : null,
+            nodeFocus: true,
+            nodeFocusRadius: 25,
+            nodeFocusColor: "black",
+            labelOffset: "15",
+            gravity: .5,
+            height : $(control.divName).outerHeight()
+        }, control.data.d3.options);
+    
+        
+        var options = control.options;
+        options.gap = options.gap * options.radius;
+        control.width = options.width;
+        control.height = options.height;
+        control.data = control.data.d3.data;
+        control.nodes = control.data.nodes;
+        control.links = control.data.links;
+        control.color = d3.scale.category20();
+        control.clickHack = 200;
+        organizeData(control);
+    
+        control.svg = d3.select(control.divName)
+            .append("svg:svg")
+            .attr("width", control.width)
+            .attr("height", control.height);
+        
+    
+        // get list of unique values in stylecolumn
+        control.linkStyles = [];
+        if (control.options.styleColumn) {
+         var x;
+         for (var i = 0; i < control.links.length; i++) {
+           if (control.linkStyles.indexOf( x = control.links[i][control.options.styleColumn].toLowerCase()) == -1) {
+             control.linkStyles.push(x);
+          }
+         }
+        } 
+        else {
+          control.linkStyles[0] = "defaultMarker";
+        }
+        
+        control.force = d3.layout.force().
+            size([control.width, control.height])
+            .linkDistance(control.options.linkDistance)
+            .charge(control.options.charge)
+            .gravity(control.options.gravity);
+    
+    
+       initPromise.resolve(control);
+    });
+    return initPromise.promise();
+}
+
+            
+function getTheData() {
+    var dataPromise = $.Deferred();
+    // return a promise if data is being received asynch and resolve it when done.
+    dataPromise.resolve (sourceData);
+    return dataPromise.promise();
+}
+</script>
+<script>
+  window['sourceData'] = {
+    "d3":{
+      "options":{
+        "radius":20,"fontSize":9,"labelFontSize":9,"gravity":0.1,"height":800,"nodeFocusColor":"black","nodeFocusRadius":25,"nodeFocus":true,"linkDistance":140,"charge":-220,"nodeResize":"count","nodeLabel":"label","linkName":"tag"},
+      "data":{
+        "nodes":[
+          {"name":"梁山","count":108,"group":"梁山","label":"梁山","userCount":true},
+          {"name":"九华山","count":4,"group":"九华山","label":"九华山","userCount":true},
+          {"name":"史进","count":2,"group":"九华山","label":"九纹龙","userCount":true},
+          {"name":"朱武","count":1,"group":"九华山","label":"神机军师","userCount":true},
+          {"name":"陈达","count":1,"group":"九华山","label":"跳涧虎","userCount":true},
+          {"name":"杨春","count":1,"group":"九华山","label":"白花蛇","userCount":true},
+          {"name":"白虎山","count":2,"group":"白虎山","label":"白虎山","userCount":true},
+          {"name":"孔明","count":2,"group":"白虎山","label":"毛头星","userCount":true},
+          {"name":"孔亮","count":2,"group":"白虎山","label":"独火星","userCount":true},
+          {"name":"桃花山","count":2,"group":"桃花山","label":"桃花山","userCount":true},
+          {"name":"周通","count":1,"group":"桃花山","label":"小霸王","userCount":true},
+          {"name":"李忠","count":2,"group":"桃花山","label":"打虎将","userCount":true},
+          {"name":"二龙山","count":7,"group":"二龙山","label":"二龙山","userCount":true},
+          {"name":"张青","count":3,"group":"二龙山","label":"菜园子","userCount":true},
+          {"name":"孙二娘","count":2,"group":"二龙山","label":"母夜叉","userCount":true},
+          {"name":"施恩","count":1,"group":"二龙山","label":"金眼彪","userCount":true},
+          {"name":"杨志","count":3,"group":"二龙山","label":"青面兽","userCount":true},
+          {"name":"武松","count":3,"group":"二龙山","label":"行者","userCount":true},
+          {"name":"曹正","count":1,"group":"二龙山","label":"操刀鬼","userCount":true},
+          {"name":"鲁智深","count":3,"group":"二龙山","label":"花和尚","userCount":true},
+          {"name":"索超","count":1,"group":"其他","label":"其他","userCount":true},
+          {"name":"梁山大元老","count":4,"group":"梁山大元老","label":"梁山大元老","userCount":true},
+          {"name":"林冲","count":5,"group":"梁山大元老","label":"豹子头","userCount":true},
+          {"name":"朱贵","count":2,"group":"梁山大元老","label":"旱地忽略","userCount":true},
+          {"name":"宋万","count":1,"group":"梁山大元老","label":"云里金刚","userCount":true},
+          {"name":"杜迁","count":1,"group":"梁山大元老","label":"摸着天","userCount":true},
+          {"name":"宋江","count":17,"group":"其他","label":"呼保义","userCount":true},
+          {"name":"柴进","count":3,"group":"其他","label":"小旋风","userCount":true},
+          {"name":"朱富","count":3,"group":"其他","label":"笑脸虎","userCount":true},
+          {"name":"李云","count":2,"group":"其他","label":"青眼虎","userCount":true},
+          {"name":"李逵","count":7,"group":"其他","label":"黑旋风","userCount":true},
+          {"name":"生辰纲","count":8,"group":"生辰纲","label":"生辰纲","userCount":true},
+          {"name":"吴用","count":3,"group":"生辰纲","label":"智多星","userCount":true},
+          {"name":"刘唐","count":1,"group":"生辰纲","label":"赤发鬼","userCount":true},
+          {"name":"白胜","count":1,"group":"生辰纲","label":"白日鼠","userCount":true},
+          {"name":"晁盖","count":2,"group":"生辰纲","label":"托塔天王","userCount":true},
+          {"name":"阮小二","count":3,"group":"生辰纲","label":"立地太岁","userCount":true},
+          {"name":"阮小五","count":3,"group":"生辰纲","label":"短命二郎","userCount":true},
+          {"name":"阮小七","count":1,"group":"生辰纲","label":"活阎罗","userCount":true},
+          {"name":"公孙胜","count":2,"group":"生辰纲","label":"入云龙","userCount":true},
+          {"name":"氓荡山","count":3,"group":"氓荡山","label":"氓荡山","userCount":true},
+          {"name":"樊瑞","count":2,"group":"氓荡山","label":"混世魔王","userCount":true},
+          {"name":"项充","count":3,"group":"氓荡山","label":"八臂哪吒","userCount":true},
+          {"name":"李衮","count":3,"group":"氓荡山","label":"飞天大圣","userCount":true},
+          {"name":"登州派","count":8,"group":"登州派","label":"登州派","userCount":true},
+          {"name":"解珍","count":3,"group":"登州派","label":"双头蛇","userCount":true},
+          {"name":"解宝","count":3,"group":"登州派","label":"双尾蝎","userCount":true},
+          {"name":"顾大嫂","count":4,"group":"登州派","label":"母大虫","userCount":true},
+          {"name":"孙新","count":3,"group":"登州派","label":"小尉迟","userCount":true},
+          {"name":"乐和","count":2,"group":"登州派","label":"铁叫子","userCount":true},
+          {"name":"孙立","count":3,"group":"登州派","label":"病尉迟","userCount":true},
+          {"name":"邹渊","count":2,"group":"登州派","label":"出林龙","userCount":true},
+          {"name":"邹润","count":2,"group":"登州派","label":"独角龙","userCount":true},
+          {"name":"揭阳镇","count":10,"group":"揭阳镇","label":"揭阳镇","userCount":true},
+          {"name":"张横","count":3,"group":"揭阳镇","label":"船火儿","userCount":true},
+          {"name":"张顺","count":4,"group":"揭阳镇","label":"浪里白条","userCount":true},
+          {"name":"侯健","count":2,"group":"揭阳镇","label":"通臂猿","userCount":true},
+          {"name":"薛永","count":2,"group":"揭阳镇","label":"病大虫","userCount":true},
+          {"name":"穆弘","count":2,"group":"揭阳镇","label":"没遮拦","userCount":true},
+          {"name":"穆春","count":2,"group":"揭阳镇","label":"小遮拦","userCount":true},
+          {"name":"童威","count":3,"group":"揭阳镇","label":"出洞蛟","userCount":true},
+          {"name":"童猛","count":3,"group":"揭阳镇","label":"翻江蛰","userCount":true},
+          {"name":"李俊","count":4,"group":"揭阳镇","label":"混江龙","userCount":true},
+          {"name":"李立","count":1,"group":"揭阳镇","label":"催命判官","userCount":true},
+          {"name":"安道全","count":1,"group":"其他","label":"神医","userCount":true},
+          {"name":"王定六","count":1,"group":"其他","label":"活闪婆","userCount":true},
+          {"name":"吕方","count":3,"group":"其他","label":"小温侯","userCount":true},
+          {"name":"郭盛","count":3,"group":"其他","label":"赛仁贵","userCount":true},
+          {"name":"朱仝","count":3,"group":"其他","label":"美髯公","userCount":true},
+          {"name":"雷横","count":2,"group":"其他","label":"插翅虎","userCount":true},
+          {"name":"宋清","count":2,"group":"其他","label":"铁扇子","userCount":true},
+          {"name":"石勇","count":1,"group":"其他","label":"石将军","userCount":true},
+          {"name":"戴宗","count":5,"group":"其他","label":"神行太保","userCount":true},
+          {"name":"杨林","count":2,"group":"其他","label":"锦豹子","userCount":true},
+          {"name":"萧让","count":2,"group":"其他","label":"圣手书生","userCount":true},
+          {"name":"金大坚","count":2,"group":"其他","label":"玉臂匠","userCount":true},
+          {"name":"饮马川","count":3,"group":"饮马川","label":"饮马川","userCount":true},
+          {"name":"裴宣","count":1,"group":"饮马川","label":"铁面孔目","userCount":true},
+          {"name":"邓飞","count":1,"group":"饮马川","label":"火眼狻猊","userCount":true},
+          {"name":"孟康","count":1,"group":"饮马川","label":"玉蟠竿","userCount":true},
+          {"name":"黄门山四杰","count":4,"group":"黄门山四杰","label":"黄门山四杰","userCount":true},
+          {"name":"欧鹏","count":1,"group":"黄门山四杰","label":"摩云金翅","userCount":true},
+          {"name":"蒋敬","count":1,"group":"黄门山四杰","label":"神算子","userCount":true},
+          {"name":"马麟","count":1,"group":"黄门山四杰","label":"铁笛仙","userCount":true},
+          {"name":"陶忠旺","count":1,"group":"黄门山四杰","label":"九尾龟","userCount":true},
+          {"name":"花荣","count":2,"group":"其他","label":"小李广","userCount":true},
+          {"name":"青州降将","count":2,"group":"青州降将","label":"青州降将","userCount":true},
+          {"name":"秦明","count":4,"group":"青州降将","label":"霹雳火","userCount":true},
+          {"name":"黄信","count":2,"group":"青州降将","label":"镇三山","userCount":true},
+          {"name":"清风山","count":3,"group":"清风山","label":"清风山","userCount":true},
+          {"name":"燕顺","count":1,"group":"清风山","label":"锦毛虎","userCount":true},
+          {"name":"郑天寿","count":1,"group":"清风山","label":"玉面郎君","userCount":true},
+          {"name":"王英","count":3,"group":"清风山","label":"矮脚虎","userCount":true},
+          {"name":"焦挺","count":1,"group":"其他","label":"没面目","userCount":true},
+          {"name":"鲍旭","count":1,"group":"其他","label":"丧门神","userCount":true},
+          {"name":"汤隆","count":2,"group":"其他","label":"金钱豹子","userCount":true},
+          {"name":"徐宁","count":3,"group":"其他","label":"金枪手","userCount":true},
+          {"name":"时迁","count":4,"group":"其他","label":"鼓上蚤","userCount":true},
+          {"name":"杨雄","count":4,"group":"其他","label":"病关索","userCount":true},
+          {"name":"石秀","count":3,"group":"其他","label":"拼命三郎","userCount":true},
+          {"name":"卢俊义","count":7,"group":"其他","label":"玉麒麟","userCount":true},
+          {"name":"燕青","count":2,"group":"其他","label":"浪子","userCount":true},
+          {"name":"蔡福","count":2,"group":"其他","label":"铁臂膊","userCount":true},
+          {"name":"蔡庆","count":2,"group":"其他","label":"一枝花","userCount":true},
+          {"name":"原三庄联盟","count":3,"group":"原三庄联盟","label":"原三庄联盟","userCount":true},
+          {"name":"扈三娘","count":2,"group":"原三庄联盟","label":"一丈青","userCount":true},
+          {"name":"杜兴","count":3,"group":"原三庄联盟","label":"鬼脸儿","userCount":true},
+          {"name":"李应","count":2,"group":"原三庄联盟","label":"扑天雕","userCount":true},
+          {"name":"段景住","count":1,"group":"其他","label":"金毛犬","userCount":true},
+          {"name":"曾头市","count":2,"group":"曾头市","label":"曾头市","userCount":true},
+          {"name":"郁保四","count":1,"group":"曾头市","label":"险道神","userCount":true},
+          {"name":"史文恭","count":1,"group":"曾头市","label":"","userCount":true},
+          {"name":"朝廷降将","count":13,"group":"朝廷降将","label":"朝廷降将","userCount":true},
+          {"name":"宣赞","count":1,"group":"朝廷降将","label":"丑郡马","userCount":true},
+          {"name":"郝思文","count":1,"group":"朝廷降将","label":"井木犴","userCount":true},
+          {"name":"关胜","count":3,"group":"朝廷降将","label":"大刀","userCount":true},
+          {"name":"单廷圭","count":2,"group":"朝廷降将","label":"圣水将","userCount":true},
+          {"name":"魏定国","count":2,"group":"朝廷降将","label":"神火将","userCount":true},
+          {"name":"张清","count":4,"group":"朝廷降将","label":"没羽箭","userCount":true},
+          {"name":"龚旺","count":1,"group":"朝廷降将","label":"花项虎","userCount":true},
+          {"name":"丁得孙","count":1,"group":"朝廷降将","label":"中箭虎","userCount":true},
+          {"name":"呼延灼","count":4,"group":"朝廷降将","label":"双鞭","userCount":true},
+          {"name":"韩滔","count":1,"group":"朝廷降将","label":"百胜将","userCount":true},
+          {"name":"彭玘","count":1,"group":"朝廷降将","label":"天目将","userCount":true},
+          {"name":"凌振","count":1,"group":"朝廷降将","label":"轰天雷","userCount":true},
+          {"name":"董平","count":1,"group":"朝廷降将","label":"双枪将","userCount":true},
+          {"name":"皇甫端","count":1,"group":"其他","label":"紫鬓伯","userCount":true},
+        ],
+        "links":[
+          {"source":0,"target":1},
+          {"source":0,"target":6},
+          {"source":0,"target":9},
+          {"source":0,"target":12},
+          {"source":0,"target":21},
+          {"source":0,"target":31},
+          {"source":0,"target":40},
+          {"source":0,"target":44},
+          {"source":0,"target":53},
+          {"source":0,"target":76},
+          {"source":0,"target":80},
+          {"source":0,"target":86},
+          {"source":0,"target":89},
+          {"source":0,"target":104},
+          {"source":1,"target":2},
+          {"source":1,"target":3},
+          {"source":1,"target":4},
+          {"source":1,"target":5},
+          {"source":2,"target":11,"tag":"启蒙"},
+          {"source":6,"target":7},
+          {"source":6,"target":8},
+          {"source":7,"target":8,"tag":"兄弟"},
+          {"source":9,"target":10},
+          {"source":9,"target":11},
+          {"source":12,"target":13},
+          {"source":12,"target":14},
+          {"source":12,"target":15},
+          {"source":12,"target":16},
+          {"source":12,"target":17},
+          {"source":12,"target":18},
+          {"source":12,"target":19},
+          {"source":13,"target":14,"tag":"夫妻"},
+          {"source":13,"target":19,"tag":"结拜"},
+          {"source":16,"target":20,"tag":"劝降"},
+          {"source":16,"target":31,"tag":"智取生辰纲"},
+          {"source":21,"target":22},
+          {"source":21,"target":23},
+          {"source":21,"target":24},
+          {"source":21,"target":25},
+          {"source":22,"target":19,"tag":"结拜"},
+          {"source":22,"target":18,"tag":"师徒"},
+          {"source":22,"target":27,"tag":"恩惠"},
+          {"source":26,"target":7,"tag":"师徒"},
+          {"source":26,"target":27,"tag":"恩惠"},
+          {"source":26,"target":53,"tag":"招募"},
+          {"source":26,"target":62,"tag":"结拜"},
+          {"source":26,"target":17,"tag":"结拜"},
+          {"source":27,"target":17,"tag":"恩惠"},
+          {"source":28,"target":23,"tag":"兄弟"},
+          {"source":28,"target":29,"tag":"师徒"},
+          {"source":29,"target":30,"tag":"胁迫"},
+          {"source":31,"target":32},
+          {"source":31,"target":33},
+          {"source":31,"target":34},
+          {"source":31,"target":35},
+          {"source":31,"target":36},
+          {"source":31,"target":37},
+          {"source":31,"target":38},
+          {"source":31,"target":39},
+          {"source":32,"target":26,"tag":"主动靠拢"},
+          {"source":36,"target":37,"tag":"兄弟"},
+          {"source":38,"target":37,"tag":"兄弟"},
+          {"source":38,"target":36,"tag":"兄弟"},
+          {"source":40,"target":41},
+          {"source":40,"target":42},
+          {"source":40,"target":43},
+          {"source":41,"target":39,"tag":"师徒"},
+          {"source":41,"target":42,"tag":"结拜"},
+          {"source":41,"target":43,"tag":"结拜"},
+          {"source":42,"target":43,"tag":"结拜"},
+          {"source":44,"target":45},
+          {"source":44,"target":46},
+          {"source":44,"target":47},
+          {"source":44,"target":48},
+          {"source":44,"target":49},
+          {"source":44,"target":50},
+          {"source":44,"target":51},
+          {"source":44,"target":52},
+          {"source":45,"target":46,"tag":"兄弟"},
+          {"source":45,"target":47,"tag":"表姐弟"},
+          {"source":46,"target":47,"tag":"表姐弟"},
+          {"source":48,"target":47,"tag":"夫妻"},
+          {"source":48,"target":50,"tag":"兄弟"},
+          {"source":49,"target":50,"tag":"妻舅"},
+          {"source":51,"target":52,"tag":"叔侄"},
+          {"source":53,"target":54},
+          {"source":53,"target":55},
+          {"source":53,"target":56},
+          {"source":53,"target":57},
+          {"source":53,"target":58},
+          {"source":53,"target":59},
+          {"source":53,"target":60},
+          {"source":53,"target":61},
+          {"source":53,"target":62},
+          {"source":53,"target":63},
+          {"source":54,"target":55,"tag":"兄弟"},
+          {"source":54,"target":62,"tag":"结拜"},
+          {"source":56,"target":57,"tag":"徒弟"},
+          {"source":57,"target":59,"tag":"痛打"},
+          {"source":58,"target":59,"tag":"兄弟"},
+          {"source":60,"target":61,"tag":"兄弟"},
+          {"source":60,"target":62,"tag":"追随"},
+          {"source":61,"target":62,"tag":"追随"},
+          {"source":55,"target":64,"tag":"胁迫"},
+          {"source":55,"target":65,"tag":"招募"},
+          {"source":66,"target":67,"tag":"好对手"},
+          {"source":66,"target":26,"tag":"护卫"},
+          {"source":67,"target":26,"tag":"护卫"},
+          {"source":68,"target":69,"tag":"同事"},
+          {"source":68,"target":26,"tag":"好友"},
+          {"source":70,"target":26,"tag":"兄弟"},
+          {"source":71,"target":26,"tag":"慕名投靠"},
+          {"source":72,"target":26,"tag":"生死之交"},
+          {"source":72,"target":73,"tag":"结拜"},
+          {"source":72,"target":74,"tag":"招募"},
+          {"source":72,"target":75,"tag":"招募"},
+          {"source":72,"target":79,"tag":"招募"},
+          {"source":74,"target":75,"tag":"同乡"},
+          {"source":76,"target":77},
+          {"source":76,"target":78},
+          {"source":76,"target":79},
+          {"source":80,"target":81},
+          {"source":80,"target":82},
+          {"source":80,"target":83},
+          {"source":80,"target":84},
+          {"source":80,"target":26,"tag":"招募"},
+          {"source":85,"target":26,"tag":"好友"},
+          {"source":85,"target":87,"tag":"妹夫"},
+          {"source":86,"target":87},
+          {"source":86,"target":88},
+          {"source":26,"target":87,"tag":"用计使其归顺"},
+          {"source":87,"target":88,"tag":"师徒"},
+          {"source":89,"target":90},
+          {"source":89,"target":91},
+          {"source":89,"target":92},
+          {"source":89,"target":26,"tag":"招募"},
+          {"source":30,"target":26,"tag":"死心追随"},
+          {"source":30,"target":93,"tag":"招募"},
+          {"source":30,"target":94,"tag":"招募"},
+          {"source":30,"target":95,"tag":"招募"},
+          {"source":95,"target":96,"tag":"表兄弟"},
+          {"source":96,"target":97,"tag":"盔甲"},
+          {"source":98,"target":97,"tag":"救助"},
+          {"source":98,"target":99,"tag":"结拜"},
+          {"source":99,"target":97,"tag":"结识"},
+          {"source":99,"target":100,"tag":"生死之交"},
+          {"source":100,"target":101,"tag":"主仆"},
+          {"source":102,"target":103,"tag":"兄弟"},
+          {"source":100,"target":102,"tag":"救助"},
+          {"source":100,"target":103,"tag":"救助"},
+          {"source":100,"target":22,"tag":"师兄弟"},
+          {"source":104,"target":105},
+          {"source":104,"target":106},
+          {"source":104,"target":107},
+          {"source":106,"target":107,"tag":"主仆"},
+          {"source":106,"target":98,"tag":"营救"},
+          {"source":105,"target":92,"tag":"夫妻"},
+          {"source":26,"target":92,"tag":"做媒"},
+          {"source":105,"target":26,"tag":"做媒"},
+          {"source":108,"target":109,"tag":"夺马"},
+          {"source":109,"target":110},
+          {"source":109,"target":111},
+          {"source":100,"target":111,"tag":"擒获"},
+          {"source":32,"target":110,"tag":"劝降"},
+          {"source":35,"target":111,"tag":"暗算"},
+          {"source":112,"target":113},
+          {"source":112,"target":114},
+          {"source":112,"target":115},
+          {"source":112,"target":116},
+          {"source":112,"target":117},
+          {"source":112,"target":118},
+          {"source":112,"target":119},
+          {"source":112,"target":120},
+          {"source":112,"target":121},
+          {"source":112,"target":122},
+          {"source":112,"target":123},
+          {"source":112,"target":124},
+          {"source":112,"target":125},
+          {"source":112,"target":0},
+          {"source":118,"target":126,"tag":"举荐"},
+          {"source":113,"target":115,"tag":"原部下"},
+          {"source":114,"target":115,"tag":"原部下"},
+          {"source":115,"target":116,"tag":"降服"},
+          {"source":115,"target":117,"tag":"降服"},
+          {"source":118,"target":119,"tag":"原部下"},
+          {"source":118,"target":120,"tag":"原部下"},
+          {"source":121,"target":122,"tag":"原部下"},
+          {"source":121,"target":123,"tag":"原部下"},
+          {"source":121,"target":124,"tag":"原部下"},
+        ]
+      }
+    }
+  };
+</script></head><body><div>水浒人物关系 / Main characters and relationships in <a href="https://en.wikipedia.org/wiki/Water_Margin">Water Margin</a><aside><small>
+    works best in Chrome<br/>
+    Click a node to zoom in / zoom out<br/>
+    Hover over a node / link for details<br/>
+   </aside>
+</div>
+  <div id="chart">
+
+  </div>
+
+ </body>
+</html>

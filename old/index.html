@@ -1,0 +1,1028 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Bin Wu</title>
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/css/bootstrap.min.css" rel="stylesheet">
+    <!-- <link href="css/bootstrap.css" rel="stylesheet"> -->
+    <link href="css/doc.css" rel="stylesheet">
+    <meta name="robots" content="noindex">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8"/>
+</head>
+<style>
+.section{ margin-bottom: 60px;}
+a{ font-weight: bold }
+.progress{ height: auto !important; display: inline-block; margin-bottom: 0px}
+.progress .progress-bar{ font-weight: bold; font-size: 18px; line-height: 28px; padding: 0 20px  }
+.label{  font-size: 16px; line-height: 24px; padding: 0 10px; margin-bottom: 10px }
+h1 small, h2 small, h3 small, h4 small, h5 small, h6 small{ color: #777; }
+h1, h2, h3{ text-shadow: 0 -1px 0 #fff;}
+#contact li{ list-style: none; }
+#contact ul{ margin-left: 0 }
+.portrait {
+  width: 150px;
+  height: 150px;
+  margin: 0 10px 0 0;
+  float: left;
+}
+body{ background-color: #fafafa }
+@font-face {
+  font-family: 'Glyphicons Halflings';
+  src: url('fonts/glyphicons-halflings-regular.eot');
+  src: url('fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('fonts/glyphicons-halflings-regular.woff') format('woff'), url('fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('fonts/glyphicons-halflings-regular.svg#glyphicons-halflingsregular') format('svg');
+}
+.glyphicon {
+  position: relative;
+  top: 1px;
+  display: inline-block;
+  font-family: 'Glyphicons Halflings';
+  -webkit-font-smoothing: antialiased;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+}
+
+.glyphicon-asterisk:before {
+  content: "\2a";
+}
+
+.glyphicon-plus:before {
+  content: "\2b";
+}
+
+.glyphicon-euro:before {
+  content: "\20ac";
+}
+
+.glyphicon-minus:before {
+  content: "\2212";
+}
+
+.glyphicon-cloud:before {
+  content: "\2601";
+}
+
+.glyphicon-envelope:before {
+  content: "\2709";
+}
+
+.glyphicon-pencil:before {
+  content: "\270f";
+}
+
+.glyphicon-glass:before {
+  content: "\e001";
+}
+
+.glyphicon-music:before {
+  content: "\e002";
+}
+
+.glyphicon-search:before {
+  content: "\e003";
+}
+
+.glyphicon-heart:before {
+  content: "\e005";
+}
+
+.glyphicon-star:before {
+  content: "\e006";
+}
+
+.glyphicon-star-empty:before {
+  content: "\e007";
+}
+
+.glyphicon-user:before {
+  content: "\e008";
+}
+
+.glyphicon-film:before {
+  content: "\e009";
+}
+
+.glyphicon-th-large:before {
+  content: "\e010";
+}
+
+.glyphicon-th:before {
+  content: "\e011";
+}
+
+.glyphicon-th-list:before {
+  content: "\e012";
+}
+
+.glyphicon-ok:before {
+  content: "\e013";
+}
+
+.glyphicon-remove:before {
+  content: "\e014";
+}
+
+.glyphicon-zoom-in:before {
+  content: "\e015";
+}
+
+.glyphicon-zoom-out:before {
+  content: "\e016";
+}
+
+.glyphicon-off:before {
+  content: "\e017";
+}
+
+.glyphicon-signal:before {
+  content: "\e018";
+}
+
+.glyphicon-cog:before {
+  content: "\e019";
+}
+
+.glyphicon-trash:before {
+  content: "\e020";
+}
+
+.glyphicon-home:before {
+  content: "\e021";
+}
+
+.glyphicon-file:before {
+  content: "\e022";
+}
+
+.glyphicon-time:before {
+  content: "\e023";
+}
+
+.glyphicon-road:before {
+  content: "\e024";
+}
+
+.glyphicon-download-alt:before {
+  content: "\e025";
+}
+
+.glyphicon-download:before {
+  content: "\e026";
+}
+
+.glyphicon-upload:before {
+  content: "\e027";
+}
+
+.glyphicon-inbox:before {
+  content: "\e028";
+}
+
+.glyphicon-play-circle:before {
+  content: "\e029";
+}
+
+.glyphicon-repeat:before {
+  content: "\e030";
+}
+
+.glyphicon-refresh:before {
+  content: "\e031";
+}
+
+.glyphicon-list-alt:before {
+  content: "\e032";
+}
+
+.glyphicon-flag:before {
+  content: "\e034";
+}
+
+.glyphicon-headphones:before {
+  content: "\e035";
+}
+
+.glyphicon-volume-off:before {
+  content: "\e036";
+}
+
+.glyphicon-volume-down:before {
+  content: "\e037";
+}
+
+.glyphicon-volume-up:before {
+  content: "\e038";
+}
+
+.glyphicon-qrcode:before {
+  content: "\e039";
+}
+
+.glyphicon-barcode:before {
+  content: "\e040";
+}
+
+.glyphicon-tag:before {
+  content: "\e041";
+}
+
+.glyphicon-tags:before {
+  content: "\e042";
+}
+
+.glyphicon-book:before {
+  content: "\e043";
+}
+
+.glyphicon-print:before {
+  content: "\e045";
+}
+
+.glyphicon-font:before {
+  content: "\e047";
+}
+
+.glyphicon-bold:before {
+  content: "\e048";
+}
+
+.glyphicon-italic:before {
+  content: "\e049";
+}
+
+.glyphicon-text-height:before {
+  content: "\e050";
+}
+
+.glyphicon-text-width:before {
+  content: "\e051";
+}
+
+.glyphicon-align-left:before {
+  content: "\e052";
+}
+
+.glyphicon-align-center:before {
+  content: "\e053";
+}
+
+.glyphicon-align-right:before {
+  content: "\e054";
+}
+
+.glyphicon-align-justify:before {
+  content: "\e055";
+}
+
+.glyphicon-list:before {
+  content: "\e056";
+}
+
+.glyphicon-indent-left:before {
+  content: "\e057";
+}
+
+.glyphicon-indent-right:before {
+  content: "\e058";
+}
+
+.glyphicon-facetime-video:before {
+  content: "\e059";
+}
+
+.glyphicon-picture:before {
+  content: "\e060";
+}
+
+.glyphicon-map-marker:before {
+  content: "\e062";
+}
+
+.glyphicon-adjust:before {
+  content: "\e063";
+}
+
+.glyphicon-tint:before {
+  content: "\e064";
+}
+
+.glyphicon-edit:before {
+  content: "\e065";
+}
+
+.glyphicon-share:before {
+  content: "\e066";
+}
+
+.glyphicon-check:before {
+  content: "\e067";
+}
+
+.glyphicon-move:before {
+  content: "\e068";
+}
+
+.glyphicon-step-backward:before {
+  content: "\e069";
+}
+
+.glyphicon-fast-backward:before {
+  content: "\e070";
+}
+
+.glyphicon-backward:before {
+  content: "\e071";
+}
+
+.glyphicon-play:before {
+  content: "\e072";
+}
+
+.glyphicon-pause:before {
+  content: "\e073";
+}
+
+.glyphicon-stop:before {
+  content: "\e074";
+}
+
+.glyphicon-forward:before {
+  content: "\e075";
+}
+
+.glyphicon-fast-forward:before {
+  content: "\e076";
+}
+
+.glyphicon-step-forward:before {
+  content: "\e077";
+}
+
+.glyphicon-eject:before {
+  content: "\e078";
+}
+
+.glyphicon-chevron-left:before {
+  content: "\e079";
+}
+
+.glyphicon-chevron-right:before {
+  content: "\e080";
+}
+
+.glyphicon-plus-sign:before {
+  content: "\e081";
+}
+
+.glyphicon-minus-sign:before {
+  content: "\e082";
+}
+
+.glyphicon-remove-sign:before {
+  content: "\e083";
+}
+
+.glyphicon-ok-sign:before {
+  content: "\e084";
+}
+
+.glyphicon-question-sign:before {
+  content: "\e085";
+}
+
+.glyphicon-info-sign:before {
+  content: "\e086";
+}
+
+.glyphicon-screenshot:before {
+  content: "\e087";
+}
+
+.glyphicon-remove-circle:before {
+  content: "\e088";
+}
+
+.glyphicon-ok-circle:before {
+  content: "\e089";
+}
+
+.glyphicon-ban-circle:before {
+  content: "\e090";
+}
+
+.glyphicon-arrow-left:before {
+  content: "\e091";
+}
+
+.glyphicon-arrow-right:before {
+  content: "\e092";
+}
+
+.glyphicon-arrow-up:before {
+  content: "\e093";
+}
+
+.glyphicon-arrow-down:before {
+  content: "\e094";
+}
+
+.glyphicon-share-alt:before {
+  content: "\e095";
+}
+
+.glyphicon-resize-full:before {
+  content: "\e096";
+}
+
+.glyphicon-resize-small:before {
+  content: "\e097";
+}
+
+.glyphicon-exclamation-sign:before {
+  content: "\e101";
+}
+
+.glyphicon-gift:before {
+  content: "\e102";
+}
+
+.glyphicon-leaf:before {
+  content: "\e103";
+}
+
+.glyphicon-eye-open:before {
+  content: "\e105";
+}
+
+.glyphicon-eye-close:before {
+  content: "\e106";
+}
+
+.glyphicon-warning-sign:before {
+  content: "\e107";
+}
+
+.glyphicon-plane:before {
+  content: "\e108";
+}
+
+.glyphicon-random:before {
+  content: "\e110";
+}
+
+.glyphicon-comment:before {
+  content: "\e111";
+}
+
+.glyphicon-magnet:before {
+  content: "\e112";
+}
+
+.glyphicon-chevron-up:before {
+  content: "\e113";
+}
+
+.glyphicon-chevron-down:before {
+  content: "\e114";
+}
+
+.glyphicon-retweet:before {
+  content: "\e115";
+}
+
+.glyphicon-shopping-cart:before {
+  content: "\e116";
+}
+
+.glyphicon-folder-close:before {
+  content: "\e117";
+}
+
+.glyphicon-folder-open:before {
+  content: "\e118";
+}
+
+.glyphicon-resize-vertical:before {
+  content: "\e119";
+}
+
+.glyphicon-resize-horizontal:before {
+  content: "\e120";
+}
+
+.glyphicon-hdd:before {
+  content: "\e121";
+}
+
+.glyphicon-bullhorn:before {
+  content: "\e122";
+}
+
+.glyphicon-certificate:before {
+  content: "\e124";
+}
+
+.glyphicon-thumbs-up:before {
+  content: "\e125";
+}
+
+.glyphicon-thumbs-down:before {
+  content: "\e126";
+}
+
+.glyphicon-hand-right:before {
+  content: "\e127";
+}
+
+.glyphicon-hand-left:before {
+  content: "\e128";
+}
+
+.glyphicon-hand-up:before {
+  content: "\e129";
+}
+
+.glyphicon-hand-down:before {
+  content: "\e130";
+}
+
+.glyphicon-circle-arrow-right:before {
+  content: "\e131";
+}
+
+.glyphicon-circle-arrow-left:before {
+  content: "\e132";
+}
+
+.glyphicon-circle-arrow-up:before {
+  content: "\e133";
+}
+
+.glyphicon-circle-arrow-down:before {
+  content: "\e134";
+}
+
+.glyphicon-globe:before {
+  content: "\e135";
+}
+
+.glyphicon-tasks:before {
+  content: "\e137";
+}
+
+.glyphicon-filter:before {
+  content: "\e138";
+}
+
+.glyphicon-fullscreen:before {
+  content: "\e140";
+}
+
+.glyphicon-dashboard:before {
+  content: "\e141";
+}
+
+.glyphicon-heart-empty:before {
+  content: "\e143";
+}
+
+.glyphicon-link:before {
+  content: "\e144";
+}
+
+.glyphicon-phone:before {
+  content: "\e145";
+}
+
+.glyphicon-usd:before {
+  content: "\e148";
+}
+
+.glyphicon-gbp:before {
+  content: "\e149";
+}
+
+.glyphicon-sort:before {
+  content: "\e150";
+}
+
+.glyphicon-sort-by-alphabet:before {
+  content: "\e151";
+}
+
+.glyphicon-sort-by-alphabet-alt:before {
+  content: "\e152";
+}
+
+.glyphicon-sort-by-order:before {
+  content: "\e153";
+}
+
+.glyphicon-sort-by-order-alt:before {
+  content: "\e154";
+}
+
+.glyphicon-sort-by-attributes:before {
+  content: "\e155";
+}
+
+.glyphicon-sort-by-attributes-alt:before {
+  content: "\e156";
+}
+
+.glyphicon-unchecked:before {
+  content: "\e157";
+}
+
+.glyphicon-expand:before {
+  content: "\e158";
+}
+
+.glyphicon-collapse-down:before {
+  content: "\e159";
+}
+
+.glyphicon-collapse-up:before {
+  content: "\e160";
+}
+
+.glyphicon-log-in:before {
+  content: "\e161";
+}
+
+.glyphicon-flash:before {
+  content: "\e162";
+}
+
+.glyphicon-log-out:before {
+  content: "\e163";
+}
+
+.glyphicon-new-window:before {
+  content: "\e164";
+}
+
+.glyphicon-record:before {
+  content: "\e165";
+}
+
+.glyphicon-save:before {
+  content: "\e166";
+}
+
+.glyphicon-open:before {
+  content: "\e167";
+}
+
+.glyphicon-saved:before {
+  content: "\e168";
+}
+
+.glyphicon-import:before {
+  content: "\e169";
+}
+
+.glyphicon-export:before {
+  content: "\e170";
+}
+
+.glyphicon-send:before {
+  content: "\e171";
+}
+
+.glyphicon-floppy-disk:before {
+  content: "\e172";
+}
+
+.glyphicon-floppy-saved:before {
+  content: "\e173";
+}
+
+.glyphicon-floppy-remove:before {
+  content: "\e174";
+}
+
+.glyphicon-floppy-save:before {
+  content: "\e175";
+}
+
+.glyphicon-floppy-open:before {
+  content: "\e176";
+}
+
+.glyphicon-credit-card:before {
+  content: "\e177";
+}
+
+.glyphicon-transfer:before {
+  content: "\e178";
+}
+
+.glyphicon-cutlery:before {
+  content: "\e179";
+}
+
+.glyphicon-header:before {
+  content: "\e180";
+}
+
+.glyphicon-compressed:before {
+  content: "\e181";
+}
+
+.glyphicon-earphone:before {
+  content: "\e182";
+}
+
+.glyphicon-phone-alt:before {
+  content: "\e183";
+}
+
+.glyphicon-tower:before {
+  content: "\e184";
+}
+
+.glyphicon-stats:before {
+  content: "\e185";
+}
+
+.glyphicon-sd-video:before {
+  content: "\e186";
+}
+
+.glyphicon-hd-video:before {
+  content: "\e187";
+}
+
+.glyphicon-subtitles:before {
+  content: "\e188";
+}
+
+.glyphicon-sound-stereo:before {
+  content: "\e189";
+}
+
+.glyphicon-sound-dolby:before {
+  content: "\e190";
+}
+
+.glyphicon-sound-5-1:before {
+  content: "\e191";
+}
+
+.glyphicon-sound-6-1:before {
+  content: "\e192";
+}
+
+.glyphicon-sound-7-1:before {
+  content: "\e193";
+}
+
+.glyphicon-copyright-mark:before {
+  content: "\e194";
+}
+
+.glyphicon-registration-mark:before {
+  content: "\e195";
+}
+
+.glyphicon-cloud-download:before {
+  content: "\e197";
+}
+
+.glyphicon-cloud-upload:before {
+  content: "\e198";
+}
+
+.glyphicon-tree-conifer:before {
+  content: "\e199";
+}
+
+.glyphicon-tree-deciduous:before {
+  content: "\e200";
+}
+
+.glyphicon-briefcase:before {
+  content: "\1f4bc";
+}
+
+.glyphicon-calendar:before {
+  content: "\1f4c5";
+}
+
+.glyphicon-pushpin:before {
+  content: "\1f4cc";
+}
+
+.glyphicon-paperclip:before {
+  content: "\1f4ce";
+}
+
+.glyphicon-camera:before {
+  content: "\1f4f7";
+}
+
+.glyphicon-lock:before {
+  content: "\1f512";
+}
+
+.glyphicon-bell:before {
+  content: "\1f514";
+}
+
+.glyphicon-bookmark:before {
+  content: "\1f516";
+}
+
+.glyphicon-fire:before {
+  content: "\1f525";
+}
+
+.glyphicon-wrench:before {
+  content: "\1f527";
+}
+</style>
+<body data-twttr-rendered="true">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="bs-sidebar affix">
+                    <ul class="nav bs-sidenav">
+                        <li><a href="#me"><i class="glyphicon glyphicon-book"></i>&nbsp;<i class="glyphicon glyphicon-chevron-right pull-right"></i> Me</a></li>
+                        <li><a href="#skills"><i class="glyphicon glyphicon-thumbs-up"></i>&nbsp;<i class="glyphicon glyphicon-chevron-right pull-right"></i> Skills</a></li>
+                        <li><a href="#work"><i class="glyphicon glyphicon-wrench"></i>&nbsp;<i class="glyphicon glyphicon-chevron-right pull-right"></i> Work Experience</a></li>
+                        <li><a href="#projects"><i class="glyphicon glyphicon-tasks"></i>&nbsp;<i class="glyphicon glyphicon-chevron-right pull-right"></i> Projects</a></li>
+                        <li><a href="#education"><i class="glyphicon glyphicon-book"></i>&nbsp;<i class="glyphicon glyphicon-chevron-right pull-right"></i> Education</a></li>
+                        <li><a href="#contact"><i class="glyphicon glyphicon-envelope"></i>&nbsp;<i class="glyphicon glyphicon-chevron-right pull-right"></i> Contact</a></li>
+                        <li><a href="#resume"><i class="glyphicon glyphicon-file"></i>&nbsp;<i class="glyphicon glyphicon-chevron-right pull-right"></i> Resume</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <div class="section" id="me">
+                    <div class="page-header">
+                        <H1>Me
+                        </H1>
+                    </div>
+		    <pre>
+		    <p>~$ whoami<br/>Bin Wu</p></pre>
+                    <p>Graduated from <a href="http://www.utdallas.edu/">University of Texas at Dallas</a> in December 2011, I hold a Master's degree in Computer Science. Currently I am working @ <a href="http://www2.sei-mi.com">SEI</a> as a full stack developer in Irving, TX.</p>
+                </div>
+                <div class="section" id="skills">
+                    <div class="page-header">
+                        <H1>Skills
+                            <small>Sorted by proficiency</small>
+                        </H1>
+                    </div>
+                    <div>
+                        <div class="progress progress-striped active">
+                            <div class="progress-bar" style="width: 100%; font-size: 14px; line-height: 24px;">Striped - Using in current job</div>
+                        </div>
+                    </div>
+                    <h3>Languages & Tools</h3>
+                    <div class="progress progress-striped active">
+                        <div class="progress-bar" style="width: 100%;">Perl (Dancer)</div>
+                    </div>
+                    <div class="progress progress-striped active">
+                        <div class="progress-bar" style="width: 100%;">MySQL</div>
+                    </div>
+                    <div class="progress progress-striped active">
+                        <div class="progress-bar" style="width: 100%;">JavaScript</div>
+                    </div>
+                    <div class="progress progress-striped active">
+                        <div class="progress-bar progress-bar-success " style="width: 100%;">Bootstrap</div>
+                    </div>
+                    <div class="progress progress-striped active">
+                        <div class="progress-bar progress-bar-success" style="width: 100%;">Git/SVN</div>
+                    </div>
+                    <div class="progress active">
+                        <div class="progress-bar progress-bar-success" style="width: 100%;">Shell Scripting</div>
+                    </div>
+                    <div class="progress progress-striped active">
+                        <div class="progress-bar progress-bar-warning " style="width: 100%;">HTML</div>
+                    </div>
+                    <div class="progress progress-striped active">
+                        <div class="progress-bar progress-bar-warning" style="width: 100%;">CSS</div>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-warning" style="width: 100%;">AngularJS</div>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-warning" style="width: 100%;">NodeJS</div>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-warning" style="width: 100%;">Express</div>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-warning" style="width: 100%;">MongoDB</div>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-warning" style="width: 100%;">PHP</div>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-warning" style="width: 100%;">C/C++</div>
+                    </div>
+                </ul>
+            </div>
+            <div class="section" id="work">
+                <div class="page-header">
+                    <h1>Work Experience</h1>
+                </div>
+                <h3>Software Engineer at <a href="http://www2.sei-mi.com"><img src="img/sei.jpg" alt="SEI" width="100px" height="39px"></a> <small>Oct 2014 -- Present | Irving, TX</small></h3>
+                Design, develop and support a Perl Dancer application that connects event organizers to participants, helps organizers to better serve participants before, during and after the event. Backend: Perl Dancer, Mysql, Nginx. Frontend: jQuery, Bootstrap.
+                <h3>Senior Developer at  <a href="http://hrsmart.com"><img src="img/105b797.png" alt="hrsmart.com"></a> <small>May 2014 -- Oct 2014 | Richardson, TX</small></h3>
+                <li>Develop internal tools to collect and analyze Weekly Status Report of employeers: Perl + Angular</li>
+                <li>Gather feedback from Quality Assurance Department then optimize the workflow of Internal QA Environment Tool</li>
+                <h3>Client Developer at  <a href="http://hrsmart.com"><img src="img/105b797.png" alt="hrsmart.com"></a> <small>July 2011 -- May 2014 | Richardson, TX</small></h3>
+                <li>Develop and customize <a href="http://tms.monster.com"><img src="img/monster.png" alt="tms.monster.com">TMS(Talent Management System)</a> for a variety of clients in LAMP(ERL) stack.</li>
+                <li>Debug and maintain different TMS releases in a collaborative team environment using ticket tracking system, wiki documentation and version control software (GIT)</li>
+                <li>Provide support and maintenance for Posting Manager - a large-scale tool that crossposts jobs to 100+ job boards all over the world. (Monster, Indeed, CareerBuilder, Naukri, Zhaopin etc.)</li>
+                <li>Responsible for the Internal Training Environment Deployer: Perl + Bash + Sed + SVN</li>
+                <br>
+                <h3>Web Developer at <a href="http://utdallas.edu"><img src="img/30430d3.png" alt="utdallas.edu"></a> <small>May 2010 – May 2011 | Richardson, TX</small></h3>
+                <p>Worked on a brand new UT Dallas <a href="https://explorer.utdallas.edu/">web application</a> which includes data administration, database maintenance, open source web application development, diligent problem solving: PHP + JavaScript + MySQL.</p>
+            </div>
+
+            <div class="section" id="projects">
+
+                <div class="page-header">
+                    <h1>Projects</h1>
+                </div>
+                <h3>HuCha - A Chrome Extension for Hupu.com <small>Jan 2015</small></h3>
+                <p>Available at Chrome Store: <a href="https://chrome.google.com/webstore/detail/%E8%99%8E%E6%8F%92-%E8%99%8E%E6%89%91%E8%AE%BA%E5%9D%9B%E5%8A%A9%E6%89%8B%E6%8F%92%E4%BB%B6/pplicdfdfdidkokeepldocmmmbonglpo"><img src="img/hucha.png"></img></a></p>
+                <p>This Extension was written at leisure to make the my own experience at bbs.hupu.com better. Surprisingly, it had over 800 downloads in just a couple days after I simply posted a thread on the website (Hupu) itself. Hupu.com is similar to Reddit but with only sport section. Some of the features are:</p>
+                <li>Anti-censoring. It's well known that some words are censored on Chinese Internet. I figured out a little hack to unveal the content to its original version on Hupu.com.</li>
+                <li>Black List. Hide threads or comments posted by the users you don't favor.</li> 
+                <li>Pattern Matching. Fold up comments in long abusive language.</li>
+                <h3>Research Explorer <small>June 2009 – July 2011</small></h3>
+                <p>UT Dallas's portal for showcasing research and work by professors, research facilities and various departments.</p>
+                <br>
+                <h3>H-E-B Exporer</h3>
+                <p>Winner of the H-E-B University Developer Challenge. Created a service that provides customers with an interactive view to see how and where their money was spent in stores using pre-built database: PHP + JQuery + Highcharts + MySQL </p>
+                <div class="bs-callout bs-callout-info">
+                    <p>Source code is available on <a href="https://github.com/nosrevi/GFW">github</a>. Listed are the test accounts:</p>
+                    <p>
+                        <ul class="page_ul">
+                            <li><a href="http://gfw.hechongguang.com/login.php?username=tcampbell%40hebdevchallenge.com&amp;password=abrie&amp;action=logon" target="_new">tcampbell@hebdevchallenge.com</a></li>
+                            <li><a href="http://gfw.hechongguang.com/login.php?username=polson%40hebdevchallenge.com&amp;password=emoss&amp;action=logon" target="_new">polson@hebdevchallenge.com</a></li>
+                            <li><a href="http://gfw.hechongguang.com/login.php?username=ddraper%40hebdevchallenge.com&amp;password=jhamm&amp;action=logon" target="_new">ddraper@hebdevchallenge.com</a></li>
+                        </ul>
+                    </p>
+                </div>
+            </div>
+            <div class="section" id="education">
+                <div class="page-header">
+                    <h1>Education</h1>
+                </div>
+                <h3><a href="http://utdallas.edu">The University of Texas at Dallas</a><br><small>Master of Science (MS), Computer Science | 2009 – 2011</small></h3>
+                <br>
+                <h3><a href="http://iao.nuaa.edu.cn/">Nanjing University of Aeronautics and Astronautics</a><br><small>Bachelor of Science (BS), Computer Science | 2005 – 2009</small></h3>
+            </div>
+            <div class="section" id="contact">
+                <div class="page-header">
+                    <h1>Contact</h1>
+                </div>
+                <p>
+                    <ul>
+                        <li style="margin-bottom: 5px"><a class="btn btn-primary" href="mailto:nosrevi.wb@gmail.com">Email: nosrevi.wb@gmail.com</a></li>
+                        <li style="margin-bottom: 5px"><a class="btn btn-default" href="http://www.linkedin.com/pub/bin-wu/22/b35/b87/"> LinkedIn: Bin Wu</a></li>
+                    </ul>
+                </p> 
+            </div>
+            <div class="section" id="resume">
+                <div class="page-header">
+                    <h1>Resume <a class="btn btn-primary" href="files/Bin_Wu_Resume.pdf" style="text-shadow: none">  Download </a></h1>
+                </div>
+                <div>
+                 <OBJECT id="idPDF" type="application/x-oleobject" height="1120px" width="100%"classid="clsid:CA8A9780-280D-11CF-A24D-444553540000">
+                    <param name="SRC" value="files/Resume.pdf">
+                    <embed width="100%" height="1120px" src="files/Bin_Wu_Resume.pdf" >
+                    </embed>
+                </object>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</body>
+<script src="js/jquery.js"></script>
+<script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/js/bootstrap.min.js"></script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-40879248-1', 'hechongguang.com');
+  ga('send', 'pageview');
+
+  $(function(){
+    var $window = $(window)
+    var $body   = $(document.body)
+    $body.scrollspy({
+      target: '.bs-sidebar',
+    })
+  })
+
+</script>
+</html>
